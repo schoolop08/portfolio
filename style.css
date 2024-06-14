@@ -1,0 +1,267 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
+}
+
+*::selection {
+    background-color: #dfdfdf;
+    color: #171717;
+}
+
+*:focus {
+    background-color: #171717;
+}
+
+body,
+html {
+    height: 100%;
+    width: 100%;
+    background: #171717;
+    scrollbar-color: #ffd52b #0000008b;
+    scrollbar-width: 10px;
+}
+
+body {
+    overflow-x: hidden;
+}
+
+.crsr {
+    position: fixed;
+    z-index: 999;
+    background-color: #0000008b;
+    color: #ffd52b;
+    padding: 15px;
+    font-size: 30px;
+    border-radius: 100px;
+    backdrop-filter: blur(5px);
+}
+
+.crsr::selection {
+    background-color: #000000;
+}
+
+.nav {
+    z-index: 998;
+    position: fixed;
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-around;
+    padding: 0.5vh 5vw;
+    background-color: #0000008b;
+    color: #dfdfdf;
+    backdrop-filter: blur(15px);
+    font-size: 20px;
+}
+
+.nav h4:hover {
+    color: #ffd52b;
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.nav button a:hover {
+    color: #ffd52b;
+    transform: scale(1.1);
+}
+
+.nav button {
+    padding: 20px;
+    background-color: transparent;
+    border: none;
+    border-radius: 10px;
+    color: none;
+}
+
+.nav button a {
+    color: #dfdfdf;
+    text-decoration: none;
+    font-size: 20px;
+}
+
+.pg1 {
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.gsapphotu {
+    height: 45px;
+    margin-left: 4px;
+}
+
+.pg1 .card {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 1000px;
+    padding: 50px;
+    border: #ffffff1c 1px solid;
+    border-radius: 30px;
+    gap: 50px;
+    color: #dfdfdf;
+    background-color: #ffffff1c;
+    backdrop-filter: blur(20px);
+}
+
+.pg1 .ppsec {
+    width: 100%;
+}
+
+.pg1 .ppsec img {
+    height: 200px;
+    width: 200px;
+    border-radius: 100px;
+    margin-bottom: 25px;
+}
+
+.pg1 .headc h1 {
+    font-weight: 600;
+    color: #ffd52b;
+}
+
+.pg1 .headc h3 {
+    font-weight: 600;
+    color: #fff;
+}
+
+.pg1 .card .intro {
+    min-height: 300px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+.pg1 .intro h1 {
+    font-weight: 600;
+    color: #ffd52b;
+}
+
+.propg {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 100px 0;
+    font-size: 25px;
+    width: 100%;
+    text-align: center;
+    font-weight: 600;
+    color: #ffd52b;
+}
+
+.pg2 {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #171717;
+    color: #dfdfdf;
+    text-align: center;
+}
+
+.pg2 .card {
+    width: 1000px;
+    background-color: #ffffff1c;
+    backdrop-filter: blur(20px);
+    border: #ffffff1c 1px solid;
+    border-radius: 30px;
+    min-width: 300px;
+    height: 400px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    font-size: 30px;
+}
+
+.pg1 h1::selection {
+    color: #1e1e1e;
+    background-color: #ffd52b;
+}
+
+.pg2 h3 {
+    margin: 0;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+.pg2 .pp {
+    align-self: center;
+    height: 100px;
+    width: 100px;
+    border-radius: 100%;
+}
+
+.pg2 .btns {
+    display: flex;
+    flex-direction: column;
+}
+
+.pg2 .btns button {
+    border: none;
+    background-color: #535353;
+    padding: 15px;
+    margin-top: 20px;
+    border-radius: 10px;
+}
+
+.pg2 .btns button:hover {
+    cursor: pointer;
+}
+
+.pg2 .btns button a {
+    display: block;
+    color: #ffffff;
+    text-decoration: none;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+b {
+    font-weight: 650;
+    color: #ffd52b;
+}
+
+b::selection {
+    background-color: #171717;
+    color: #ffd52b;
+}
+
+@media (max-width:769px) {
+    .crsr {
+        scale: 0;
+    }
+
+    .pg1 .card,
+    .pg2 .card {
+        flex-direction: column;
+        width: 100%;
+        border-radius: 0;
+        border: 0;
+        background-color: #171717;
+    }
+
+    .nav {
+        padding: auto;
+        gap: 0;
+    }
+
+    .nav .name {
+        width: 100px;
+    }
+
+    /* 
+    .pg1,
+    .pg2,
+    .propg {
+        margin-top: 250px;
+    } */
+}
