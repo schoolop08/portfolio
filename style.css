@@ -52,7 +52,7 @@ body {
     display: flex;
     width: 100%;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
     padding: 0.5vh 5vw;
     background-color: #0000008b;
     color: #dfdfdf;
@@ -236,7 +236,8 @@ b::selection {
     }
 
     .pg1 .card,
-    .pg2 .card {
+    .pg2 .card,
+    .propg .card {
         flex-direction: column;
         width: 100%;
         border-radius: 0;
@@ -246,7 +247,7 @@ b::selection {
 
     .nav {
         padding: auto;
-        gap: 0;
+        gap: 15vw;
     }
 
     .nav .name {
