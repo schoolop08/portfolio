@@ -31,6 +31,7 @@ body {
 
 .crsr {
     position: fixed;
+    margin-top: -20vh;
     z-index: 999;
     background-color: #0000008b;
     color: #ffd52b;
