@@ -38,6 +38,7 @@ body {
     font-size: 30px;
     border-radius: 100px;
     backdrop-filter: blur(5px);
+    opacity:1;
 }
 
 .crsr::selection {
@@ -237,7 +238,7 @@ b::selection {
 
 @media (max-width:769px) {
     .crsr {
-        scale: 0;
+        opacity: 0;
     }
 
     .pg1 .card,
