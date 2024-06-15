@@ -212,14 +212,13 @@ body {
     padding: 15px;
     margin-top: 20px;
     border-radius: 10px;
-    display:flex;
     align-items:center;
     transform:scale(1);
 }
 
 .pg2 .btns button:hover {
     cursor: pointer;
-    transform:scale(1.2);
+    transform:scale(1.1);
 }
 
 .pg2 .btns button a {
