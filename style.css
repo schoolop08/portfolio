@@ -212,7 +212,8 @@ body {
     padding: 15px;
     margin-top: 20px;
     border-radius: 10px;
-    align-items:center;
+    display:flex;
+    flex-direction:column;
     transform:scale(1);
 }
 
@@ -223,6 +224,8 @@ body {
 
 .pg2 .btns button a {
     display: flex;
+    justify-items:space-between;
+    width:280px;
     align-items: center;
     color: #ffffff;
     text-decoration: none;
