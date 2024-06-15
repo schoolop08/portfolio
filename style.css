@@ -96,6 +96,12 @@ body {
     justify-content: center;
 }
 
+.propg h1 {
+    font-size: 16vmin;
+    color: #ffd52b;
+    text-transform: uppercase;
+}
+
 .gsapphotu {
     height: 45px;
     margin-left: 4px;
@@ -201,6 +207,8 @@ body {
     margin-top: 20px;
     border-radius: 10px;
     display: flex;
+    align-items: center;
+    justify-content: center;
     flex-direction: column;
     transform: scale(1);
 }
@@ -212,8 +220,8 @@ body {
 
 .pg2 .btns button a {
     display: flex;
-    justify-items: space-between;
-    width: 280px;
+    justify-content: space-between;
+    width: 300px;
     align-items: center;
     color: #ffffff;
     text-decoration: none;
@@ -248,7 +256,7 @@ b::selection {
 
     .nav {
         padding: auto;
-        gap: 15vw;
+        justify-content: space-between;
     }
 
     .nav .name {
