@@ -21,8 +21,18 @@ html {
     height: 100vh;
     width: 100%;
     background: #171717;
-    scrollbar-color: #ffd52b #0000008b;
-    scrollbar-width: 10px;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+}
+
+.bodycontainer::-webkit-scrollbar {
+    width: 10px;
+}
+
+.bodycontainer::-webkit-scrollbar-thumb {
+    background-color: #ffd52b;
 }
 
 body {
