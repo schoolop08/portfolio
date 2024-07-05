@@ -1,6 +1,15 @@
-var body = document.querySelector("body")
-var crsr = document.querySelector(".crsr")
-var pp = document.querySelector(".pp")
+var body = document.querySelector("body");
+var crsr = document.querySelector(".crsr");
+var pp = document.querySelector(".pp");
+
+user = prompt("Quick Question! What is Your Name?");
+
+setUser(user);
+
+function setUser(user) {
+  userHtml=document.querySelector(".user");
+  userHtml.innerHTML = user
+}
 
 body.addEventListener("mousemove",function(dets){
     gsap.to(crsr,{
@@ -21,7 +30,7 @@ pp.addEventListener("mousemove",function(dets){
   crsr.innerHTML = "hey i am OPS";
   setTimeout(function() {
     crsr.innerHTML = "👦";
-  }, 2000);
+  }, 1000);
 })
 
 gsap.registerPlugin(ScrollTrigger, MotionPathPlugin);

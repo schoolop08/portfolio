@@ -42,7 +42,6 @@ body {
 
 .crsr {
     position: fixed;
-    margin-top: -20vh;
     z-index: 999;
     background-color: #0000008b;
     color: #ffd52b;
@@ -58,7 +57,6 @@ body {
 }
 
 .nav {
-    margin-top: -20vh;
     z-index: 998;
     position: fixed;
     display: flex;
@@ -97,14 +95,25 @@ body {
     font-size: 20px;
 }
 
+.user {
+    margin-top: 0px;
+}
+
 .pg1,
 .propg,
 .pg2 {
     width: 100%;
-    margin: 20vh 0;
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.why {
+    height: max-content;
+    display: flex;
+    flex-direction: column;
+    gap: 10vh;
+    padding: 15vh 0;
 }
 
 .propg h1 {
@@ -151,7 +160,7 @@ body {
 }
 
 .pg1 .headc h3 {
-    font-weight: 600;
+    font-weight: 500;
     color: #fff;
 }
 
@@ -214,7 +223,6 @@ body {
 .pg2 .btns button {
     border: none;
     background-color: #535353;
-    padding: 15px;
     margin-top: 20px;
     border-radius: 10px;
     display: flex;
@@ -225,14 +233,15 @@ body {
 }
 
 .pg2 .btns button:hover {
-    cursor: pointer;
-    transform: scale(1.1);
+    transform: scale(1.02);
 }
 
 .pg2 .btns button a {
+    padding: 15px 200px;
     display: flex;
+    flex-direction: row-reverse;
     justify-content: space-between;
-    width: 300px;
+    width: 100%;
     align-items: center;
     color: #ffffff;
     text-decoration: none;
@@ -252,7 +261,7 @@ b::selection {
 
 @media (max-width:769px) {
     .crsr {
-        opacity: 0;
+        visibility: hidden;
     }
 
     .pg1 .card,
