@@ -116,8 +116,12 @@ body {
     padding: 15vh 0;
 }
 
+.propg a {
+    text-decoration: none;
+}
+
 .propg h1 {
-    font-size: 16vmin;
+    font-size: 8vmin;
     color: #ffd52b;
     text-transform: uppercase;
 }

@@ -1,91 +1,192 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pomodoro Timer</title>
     <style>
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: #f0f0f0;
-            font-family: Arial, sans-serif;
-        }
-        #timer {
-            text-align: center;
-        }
-        h1 {
-            font-size: 5rem;
-            margin-bottom: 20px;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 1.2rem;
-            cursor: pointer;
-            margin: 5px;
-        }
+      /* Basic styling and font setup */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: "Poppins", sans-serif;
+        font-weight: 400;
+        font-style: normal;
+      }
+
+      *::selection {
+        background-color: #dfdfdf;
+        color: #171717;
+      }
+
+      body,
+      html {
+        height: 100vh;
+        width: 100%;
+        background: #171717;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      /* Timer Container */
+      #timer {
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 30px;
+        background-color: #ffffff1c;
+        border: #ffffff1c 1px solid;
+        backdrop-filter: blur(20px);
+        border-radius: 30px;
+        width: 300px;
+        color: #dfdfdf;
+      }
+
+      h1 {
+        font-size: 5rem;
+        color: #ffd52b;
+        margin-bottom: 20px;
+      }
+
+      p {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+        color: #dfdfdf;
+      }
+
+      button {
+        width: 100%;
+        padding: 10px 20px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        margin: 5px;
+        background-color: transparent;
+        border: none;
+        border-radius: 10px;
+        color: #ffd52b;
+        background-color: #535353;
+        transition: transform 0.3s ease;
+      }
+
+      button:hover {
+        transform: scale(1.1);
+      }
+
+      /* Background transition based on Pomodoro state */
+      body.pomodoro {
+        background-color: #821a17; /* Red for Pomodoro work */
+        transition: background-color 0.5s ease;
+      }
+
+      body.short-break {
+        background-color: #5c6c14; /* Green for short break */
+        transition: background-color 0.5s ease;
+      }
+
+      body.long-break {
+        background-color: #126911; /* Light green for long break */
+        transition: background-color 0.5s ease;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="timer">
-        <h1 id="display">25:00</h1>
-        <button onclick="startTimer()">Start</button>
-        <button onclick="resetTimer()">Reset</button>
+      <h1 id="display">25:00</h1>
+      <p>Pomodoro Cycle Count: <span id="cycle-count">0</span></p>
+      <button onclick="startPomodoro()">Start</button>
+      <button onclick="resetTimer()">Reset</button>
     </div>
 
     <script>
-        let timeLeft = 25 * 60; // 25 minutes
-        let timerId;
-        let isRunning = false;
+      let timeLeft = 25 * 60; // Default Pomodoro time (25 minutes)
+      let timerId;
+      let isRunning = false;
+      let pomodoroCount = 0; // To track Pomodoro cycles (work sessions)
+      const cycleCountDisplay = document.getElementById("cycle-count");
+      const body = document.body;
 
-        function updateDisplay() {
-            const minutes = Math.floor(timeLeft / 60);
-            const seconds = timeLeft % 60;
-            document.getElementById('display').textContent = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
-        }
+      function updateDisplay() {
+        const minutes = Math.floor(timeLeft / 60);
+        const seconds = timeLeft % 60;
+        document.getElementById("display").textContent = `${String(
+          minutes
+        ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+      }
 
-        function startTimer() {
-            if (!isRunning) {
-                isRunning = true;
-                timerId = setInterval(() => {
-                    if (timeLeft > 0) {
-                        timeLeft--;
-                        updateDisplay();
-                    } else {
-                        clearInterval(timerId);
-                        isRunning = false;
-                        alert("Time's up!");
-                    }
-                }, 1000);
+      function startTimer(duration, callback, className) {
+        timeLeft = duration;
+        body.className = className; // Set body background state based on session
+        if (!isRunning) {
+          isRunning = true;
+          timerId = setInterval(() => {
+            if (timeLeft > 0) {
+              timeLeft--;
+              updateDisplay();
+            } else {
+              clearInterval(timerId);
+              isRunning = false;
+              callback(); // Call the function to switch between sessions/breaks
             }
+          }, 1000);
         }
+      }
 
-        function resetTimer() {
-            clearInterval(timerId);
-            timeLeft = 25 * 60;
-            isRunning = false;
-            updateDisplay();
-        }
-
-        // Make the page go fullscreen on load
-        function openFullscreen() {
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen();
-            } else if (document.documentElement.mozRequestFullScreen) { /* Firefox */
-                document.documentElement.mozRequestFullScreen();
-            } else if (document.documentElement.webkitRequestFullscreen) { /* Chrome, Safari and Opera */
-                document.documentElement.webkitRequestFullscreen();
-            } else if (document.documentElement.msRequestFullscreen) { /* IE/Edge */
-                document.documentElement.msRequestFullscreen();
+      function startPomodoro() {
+        resetTimer(); // Reset any running timer
+        pomodoroCount++;
+        cycleCountDisplay.textContent = pomodoroCount;
+        startTimer(
+          25 * 60,
+          () => {
+            if (pomodoroCount % 4 === 0) {
+              alert("Time for a long break!");
+              startLongBreak();
+            } else {
+              alert("Time for a short break!");
+              startShortBreak();
             }
-        }
+          },
+          "pomodoro"
+        ); // Red background for Pomodoro
+      }
 
-        // Go fullscreen when the page loads
-        window.onload = openFullscreen;
+      function startShortBreak() {
+        startTimer(
+          5 * 60,
+          () => {
+            alert("Break over! Back to work!");
+            startPomodoro();
+          },
+          "short-break"
+        ); // Green background for short break
+      }
+
+      function startLongBreak() {
+        startTimer(
+          15 * 60,
+          () => {
+            alert("Long break over! Back to work!");
+            startPomodoro();
+          },
+          "long-break"
+        ); // Light green background for long break
+      }
+
+      function resetTimer() {
+        clearInterval(timerId);
+        timeLeft = 25 * 60; // Default to 25 minutes
+        isRunning = false;
+        pomodoroCount = 0; // Reset Pomodoro cycle count
+        updateDisplay();
+        cycleCountDisplay.textContent = pomodoroCount; // Reset cycle count display
+        body.className = ""; // Reset background to default
+      }
+
+      // Initialize the display
+      updateDisplay();
     </script>
-</body>
+  </body>
 </html>
