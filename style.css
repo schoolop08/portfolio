@@ -72,7 +72,6 @@ body {
 
 .nav h4:hover {
     color: #ffd52b;
-    cursor: pointer;
     transform: scale(1.1);
 }
 
@@ -261,6 +260,14 @@ b {
 b::selection {
     background-color: #171717;
     color: #ffd52b;
+}
+
+
+.footer {
+    color: #dfdfdf;
+    position: absolute;
+    bottom: 0;
+    margin-bottom: 10px;
 }
 
 @media (max-width:769px) {

@@ -4,177 +4,213 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pomodoro Timer</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="stylesheet" href="cursor.css" />
     <style>
-      /* Basic styling and font setup */
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
         font-family: "Poppins", sans-serif;
-        font-weight: 400;
-        font-style: normal;
-      }
-
-      *::selection {
-        background-color: #dfdfdf;
-        color: #171717;
       }
 
       body,
       html {
-        min-height: 100vh;
+        transition: background-color 0.5s ease;
+        height: 100%;
         width: 100%;
-        background: #171717;
         display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
-        overflow-x: hidden;
+        background-color: #9b3838;
       }
 
-      /* Timer Container */
-      #timer {
-        width: 100vw;
-        height: 100vh;
-        text-align: center;
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        padding: 30px;
+      /* Card Container */
+      .timer-card {
+        background: rgba(255, 255, 255, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(20px);
+        padding: 30px;
+        border-radius: 20px;
+        width: 350px;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
         color: #dfdfdf;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
       }
 
-      h1 {
-        font-size: 5rem;
-        color: #ffd52b;
-        margin-bottom: 20px;
+      /* Tabs */
+      .tabs {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
       }
 
-      p {
+      .tab {
+        padding: 12px 15px;
+        background-color: transparent;
+        border: none;
+        color: #fff;
+        cursor: pointer;
+        font-size: 1.2rem;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+
+      .tab.active {
+        background-color: #ffd52b;
+        color: #171717;
+      }
+
+      /* Time Display */
+      .time-display {
+        text-align: center;
+        font-size: 4rem;
+      }
+
+      /* Controls */
+      .controls {
+        display: flex;
+        justify-content: space-between;
+        gap: 10px;
+      }
+
+      .controls button {
+        padding: 10px;
+        font-size: 1.2rem;
+        cursor: pointer;
+        background-color: #535353;
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        flex: 1;
+        transition: transform 0.3s ease;
+        height: 50px;
+      }
+
+      .controls button:hover {
+        transform: scale(1.05);
+      }
+
+      /* Question Mark Button */
+      .help-btn {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        background-color: #fff;
+        color: #171717;
+        border: none;
+        padding: 15px;
+        border-radius: 50%;
         font-size: 1.5rem;
-        margin-bottom: 20px;
-        color: #dfdfdf;
-      }
-
-      a {
-        width: 100%;
-      }
-
-      a button {
-        padding: 10px 20px;
-        font-size: 1.2rem;
         cursor: pointer;
-        margin: 5px;
-        background-color: transparent;
-        border: none;
-        border-radius: 10px;
-        color: #ffd52b;
-        background-color: #535353;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.3s ease;
       }
 
-      button {
-        width: 30%;
-        padding: 10px 20px;
-        font-size: 1.2rem;
-        cursor: pointer;
-        margin: 5px;
-        background-color: transparent;
-        border: none;
-        border-radius: 10px;
-        color: #dfdfdf;
-        background-color: #535353;
-        transition: transform 0.3s ease;
-      }
-
-      button:hover {
+      .help-btn:hover {
         transform: scale(1.1);
       }
 
-      /* Background transition based on Pomodoro state */
-      body.pomodoro {
-        background-color: #571307; /* Red for Pomodoro work */
-        transition: background-color 0.5s ease;
-      }
-
-      body.short-break {
-        background-color: #575407; /* Green for short break */
-        transition: background-color 0.5s ease;
-      }
-
-      body.long-break {
-        background-color: #1e5707; /* Light green for long break */
-        transition: background-color 0.5s ease;
-      }
-
-      /* How To Section */
-      #how-to {
-        margin: 10vh 0;
+      /* Modal for How Pomodoro Works */
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
         width: 100%;
-        max-width: 800px;
-        background-color: #ffffff1c;
-        border: #ffffff1c 1px solid;
-        backdrop-filter: blur(20px);
-        border-radius: 30px;
-        padding: 30px;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        justify-content: center;
+        align-items: center;
         color: #dfdfdf;
+      }
+
+      .modal-content {
+        background-color: #1e1e1e;
+        padding: 30px;
+        border-radius: 10px;
+        width: 300px;
         text-align: justify;
       }
 
-      #how-to h2 {
-        font-size: 2.5rem;
-        color: #ffd52b;
-        margin-bottom: 20px;
-        text-align: center;
+      .modal-content h2 {
+        margin-bottom: 15px;
+        color: #fff;
       }
 
-      #how-to p {
-        font-size: 1.2rem;
-        line-height: 1.6;
-        color: #dfdfdf;
+      .close-btn {
+        background-color: transparent;
+        border: none;
+        color: #fff;
+        font-size: 1.5rem;
+        width: 100%;
+        margin-top: 15px;
+        cursor: pointer;
       }
     </style>
   </head>
   <body>
-    <div id="timer">
-      <h1 id="display">25:00</h1>
-      <p>Pomodoro Cycle Count: <span id="cycle-count">0</span></p>
-      <button onclick="startPomodoro()">Start</button>
-      <button onclick="resetTimer()">Reset</button>
-      <a href="#how-to"><button>How?</button></a>
+    <div class="timer-card" id="timer-card">
+      <!-- Tabs for Pomodoro, Short Break, Long Break -->
+      <div class="tabs">
+        <button
+          class="tab active"
+          id="pomodoro-tab"
+          onclick="switchTab('pomodoro')"
+        >
+          Pomodoro
+        </button>
+        <button
+          class="tab"
+          id="short-break-tab"
+          onclick="switchTab('short-break')"
+        >
+          Short Break
+        </button>
+        <button
+          class="tab"
+          id="long-break-tab"
+          onclick="switchTab('long-break')"
+        >
+          Long Break
+        </button>
+      </div>
+
+      <!-- Time Display -->
+      <div class="time-display" id="display">25:00</div>
+
+      <!-- Controls: Start, Pause, Resume, Skip -->
+      <div class="controls">
+        <button id="start-pause-btn" onclick="toggleStartPause()">Start</button>
+        <button onclick="skipSession()">Skip</button>
+        <button onclick="resetTimer()">End</button>
+      </div>
     </div>
 
-    <!-- How To Section -->
-    <div id="how-to">
-      <h2>How to Use the Pomodoro Timer?</h2>
-      <p>
-        The Pomodoro technique helps boost productivity by working in intervals
-        of 25 minutes followed by short breaks.
-      </p>
-      <p><b>Steps:</b></p>
-      <p>
-        1. Click "Start Pomodoro Cycle" to begin a 25-minute focused work
-        session.
-      </p>
-      <p>
-        2. After 25 minutes, take a short 5-minute break. The timer will
-        automatically switch to this break.
-      </p>
-      <p>
-        3. Every 4 Pomodoros (work sessions), take a longer 15-minute break.
-      </p>
-      <p>4. You can reset the cycle anytime by clicking the "Reset" button.</p>
-    </div>
+    <!-- Question Mark Button -->
+    <button class="help-btn" onclick="showModal()">?</button>
 
+    <!-- Modal for How Pomodoro Works -->
+    <div class="modal" id="modal">
+      <div class="modal-content">
+        <h2>How Pomodoro Works</h2>
+        <p>Pomodoro Technique is a time management method.</p>
+        <p>Work for 25 minutes, followed by a 5-minute short break.</p>
+        <p>After 4 cycles, take a longer break of 15 minutes.</p>
+        <button class="close-btn" onclick="closeModal()">Close</button>
+      </div>
+    </div>
+    <div class="footer">
+      <p>made with &hearts; by OPS</p>
+    </div>
     <script>
-      let timeLeft = 25 * 60; // Default Pomodoro time (25 minutes)
       let timerId;
+      let timeLeft = 25 * 60; // Default Pomodoro time (25 minutes)
       let isRunning = false;
-      let pomodoroCount = 0; // To track Pomodoro cycles (work sessions)
-      const cycleCountDisplay = document.getElementById("cycle-count");
-      const body = document.body;
+      let isPaused = false;
+      let currentSession = "pomodoro";
 
       function updateDisplay() {
         const minutes = Math.floor(timeLeft / 60);
@@ -184,76 +220,99 @@
         ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
       }
 
-      function startTimer(duration, callback, className) {
-        timeLeft = duration;
-        body.className = className; // Set body background state based on session
-        if (!isRunning) {
+      function switchTab(session) {
+        currentSession = session;
+        resetTimer();
+        document
+          .querySelectorAll(".tab")
+          .forEach((tab) => tab.classList.remove("active"));
+        document.getElementById(`${session}-tab`).classList.add("active");
+
+        // Update theme colors for body background
+        const body = document.body;
+
+        if (session === "pomodoro") {
+          timeLeft = 25 * 60;
+          body.style.backgroundColor = "#9b3838"; // Pastel red for Pomodoro
+        }
+        if (session === "short-break") {
+          timeLeft = 5 * 60;
+          body.style.backgroundColor = "#529b38"; // Pastel yellow for Short Break
+        }
+        if (session === "long-break") {
+          timeLeft = 15 * 60;
+          body.style.backgroundColor = "#9b8238"; // Pastel green for Long Break
+        }
+
+        updateDisplay();
+      }
+
+      function toggleStartPause() {
+        const startPauseBtn = document.getElementById("start-pause-btn");
+
+        if (isRunning) {
+          if (!isPaused) {
+            clearInterval(timerId);
+            isPaused = true;
+            startPauseBtn.textContent = "Resume";
+          } else {
+            startTimer();
+            isPaused = false;
+            startPauseBtn.textContent = "Pause";
+          }
+        } else {
+          startTimer();
           isRunning = true;
-          timerId = setInterval(() => {
-            if (timeLeft > 0) {
-              timeLeft--;
-              updateDisplay();
-            } else {
-              clearInterval(timerId);
-              isRunning = false;
-              callback(); // Call the function to switch between sessions/breaks
-            }
-          }, 1000);
+          startPauseBtn.textContent = "Pause";
         }
       }
 
-      function startPomodoro() {
-        resetTimer(); // Reset any running timer
-        pomodoroCount++;
-        cycleCountDisplay.textContent = pomodoroCount;
-        startTimer(
-          25 * 60,
-          () => {
-            if (pomodoroCount % 4 === 0) {
-              alert("Time for a long break!");
-              startLongBreak();
-            } else {
-              alert("Time for a short break!");
-              startShortBreak();
-            }
-          },
-          "pomodoro"
-        ); // Red background for Pomodoro
+      function startTimer() {
+        timerId = setInterval(() => {
+          if (timeLeft > 0) {
+            timeLeft--;
+            updateDisplay();
+          } else {
+            clearInterval(timerId);
+            isRunning = false;
+            document.getElementById("start-pause-btn").textContent = "Start";
+            alert(
+              `${
+                currentSession === "pomodoro" ? "Pomodoro" : "Break"
+              } finished!`
+            );
+          }
+        }, 1000);
       }
 
-      function startShortBreak() {
-        startTimer(
-          5 * 60,
-          () => {
-            alert("Break over! Back to work!");
-            startPomodoro();
-          },
-          "short-break"
-        ); // Green background for short break
-      }
-
-      function startLongBreak() {
-        startTimer(
-          15 * 60,
-          () => {
-            alert("Long break over! Back to work!");
-            startPomodoro();
-          },
-          "long-break"
-        ); // Light green background for long break
+      function skipSession() {
+        clearInterval(timerId);
+        resetTimer();
       }
 
       function resetTimer() {
         clearInterval(timerId);
-        timeLeft = 25 * 60; // Default to 25 minutes
         isRunning = false;
-        pomodoroCount = 0; // Reset Pomodoro cycle count
+        isPaused = false;
+        document.getElementById("start-pause-btn").textContent = "Start";
+
+        if (currentSession === "pomodoro") timeLeft = 25 * 60;
+        if (currentSession === "short-break") timeLeft = 5 * 60;
+        if (currentSession === "long-break") timeLeft = 15 * 60;
+
         updateDisplay();
-        cycleCountDisplay.textContent = pomodoroCount; // Reset cycle count display
-        body.className = ""; // Reset background to default
       }
 
-      // Initialize the display
+      // Modal Handling
+      function showModal() {
+        document.getElementById("modal").style.display = "flex";
+      }
+
+      function closeModal() {
+        document.getElementById("modal").style.display = "none";
+      }
+
+      // Initialize display
       updateDisplay();
     </script>
   </body>
