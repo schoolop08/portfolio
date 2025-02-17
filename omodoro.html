@@ -3,37 +3,46 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Pomodoro Timer</title>
+    <title>Omodoro Timer</title>
     <!-- Google Font for Poppins -->
     <link
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
       rel="stylesheet"
     />
+    <link rel="stylesheet" href="cursor.css" />
     <style>
+      /* Base Styles */
       * {
         margin: 0;
         padding: 0;
         box-sizing: border-box;
         font-family: "Poppins", sans-serif;
       }
+
+      *::selection {
+        background-color: #ffffff00;
+        color: #ffffff25;
+      }
       body,
       html {
-        transition: background-color 0.5s ease;
         height: 100%;
         width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #690b22;
+        /* Using a cool gradient background */
+        background: linear-gradient(135deg, #690b22, #8e0e2e);
+        transition: background-color 0.5s ease;
       }
       /* Timer Card */
       .timer-card {
+        width: 90%;
+        max-width: 400px;
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(20px);
         padding: 30px;
         border-radius: 20px;
-        width: 450px;
         display: flex;
         flex-direction: column;
         gap: 20px;
@@ -69,7 +78,8 @@
       /* Time Display */
       .time-display {
         text-align: center;
-        font-size: 4rem;
+        font-size: 5rem;
+        font-weight: 600;
         letter-spacing: 2px;
       }
       /* Progress Bar */
@@ -116,29 +126,31 @@
       /* Help and Settings Buttons */
       .help-btn,
       .settings-btn {
-        position: fixed;
         bottom: 20px;
         background-color: #fff;
         color: #171717;
         border: none;
-        padding: 5px 15px;
-        border-radius: 50%;
-        font-size: 1.5rem;
+        padding: 5px 25px;
+        border-radius: 25px;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.3s ease;
         cursor: pointer;
+        font-size: 18px;
       }
-      .help-btn {
-        right: 20px;
-      }
-      .settings-btn {
-        right: 80px;
+      .nav {
+        display: flex;
+        width: 100vw;
+        position: fixed;
+        align-items: center;
+        justify-content: space-between;
+        top: 25px;
+        width: 450px;
       }
       .help-btn:hover,
       .settings-btn:hover {
         transform: scale(1.1);
       }
-      /* Modal Styling (common for both modals) */
+      /* Modal Styling */
       .modal {
         display: none;
         position: fixed;
@@ -155,12 +167,12 @@
         background-color: #1e1e1e;
         padding: 30px;
         border-radius: 10px;
-        width: 300px;
+        width: 800px;
         text-align: left;
       }
       .modal-content h2 {
-        margin-bottom: 15px;
-        color: #fff;
+        /* margin-bottom: 15px; */
+        color: #ffd52b;
       }
       .modal-content label {
         display: block;
@@ -177,6 +189,12 @@
         display: flex;
         justify-content: space-between;
       }
+      .modal-head {
+        display: flex;
+        width: 100%;
+        align-items: center;
+        justify-content: space-between;
+      }
       .modal-content button {
         padding: 10px;
         font-size: 1rem;
@@ -187,6 +205,8 @@
         margin: 0 5px;
       }
       .close-btn {
+        max-width: 75px;
+        padding: 25px;
         background-color: #535353;
         color: #fff;
       }
@@ -204,6 +224,19 @@
         color: #fff;
         opacity: 0.8;
       }
+      /* Responsive Styles */
+      @media (max-width: 480px) {
+        .time-display {
+          font-size: 4rem;
+        }
+        .controls button {
+          font-size: 1rem;
+          height: 45px;
+        }
+        .user {
+          font-size: 1.2rem;
+        }
+      }
     </style>
   </head>
   <body>
@@ -214,10 +247,10 @@
       <div class="tabs">
         <button
           class="tab active"
-          id="pomodoro-tab"
-          onclick="switchTab('pomodoro')"
+          id="omodoro-tab"
+          onclick="switchTab('omodoro')"
         >
-          Pomodoro
+          Omodoro
         </button>
         <button
           class="tab"
@@ -235,13 +268,13 @@
         </button>
       </div>
       <!-- Time Display -->
-      <div class="time-display" id="display">25:00</div>
+      <div class="time-display" id="display">45:00</div>
       <!-- Progress Bar -->
       <div class="progress-container">
         <div class="progress-bar" id="progress-bar"></div>
       </div>
-      <!-- Cycle Counter (for Pomodoro sessions) -->
-      <div class="cycle-counter" id="cycle-counter">Pomodoros Completed: 0</div>
+      <!-- Cycle Counter (for Omodoro sessions) -->
+      <div class="cycle-counter" id="cycle-counter">Omodoros Completed: 0</div>
       <!-- Controls -->
       <div class="controls">
         <button id="start-pause-btn" onclick="toggleStartPause()">Start</button>
@@ -250,20 +283,31 @@
       </div>
     </div>
 
-    <!-- Settings Button -->
-    <button class="settings-btn" onclick="showSettingsModal()">⚙</button>
-    <!-- Help Button -->
-    <button class="help-btn" onclick="showHelpModal()">?</button>
+    <div class="nav">
+      <!-- Settings Button -->
+      <button class="settings-btn" onclick="showSettingsModal()">
+        settings
+      </button>
+      <!-- Help Button -->
+      <button class="help-btn" onclick="showHelpModal()">info</button>
+    </div>
 
     <!-- Help Modal -->
     <div class="modal" id="help-modal">
       <div class="modal-content">
-        <h2>How Pomodoro Works</h2>
+        <div class="modal-head">
+          <h2>What is Omodoro ?</h2>
+          <button class="close-btn" onclick="closeHelpModal()">CLOSE</button>
+        </div>
         <p>
-          Work for 25 minutes, followed by a 5-minute break. After 4 cycles,
-          take a 15-minute break.
+          The Omodoro Technique is a time management method based on Pomodoro it
+          follows a different timing template of 45-minute stretches of focused
+          work broken by 10 minute short breaks. Longer breaks, typically 15 to
+          30 minutes, are taken after four consecutive work intervals. Each 45
+          minute strech is called Omodor and 4 consecutive Omodors make a
+          Omodoro. If you want you may also adjust the timings as per your needs
+          by clicking on the settings button.
         </p>
-        <button class="close-btn" onclick="closeHelpModal()">Close</button>
       </div>
     </div>
 
@@ -271,10 +315,10 @@
     <div class="modal" id="settings-modal">
       <div class="modal-content">
         <h2>Timer Settings</h2>
-        <label for="pomodoro-input">Pomodoro (minutes):</label>
-        <input type="number" id="pomodoro-input" value="25" min="1" />
+        <label for="omodoro-input">Omodoro (minutes):</label>
+        <input type="number" id="omodoro-input" value="45" min="1" />
         <label for="short-break-input">Short Break (minutes):</label>
-        <input type="number" id="short-break-input" value="5" min="1" />
+        <input type="number" id="short-break-input" value="10" min="1" />
         <label for="long-break-input">Long Break (minutes):</label>
         <input type="number" id="long-break-input" value="15" min="1" />
         <div class="btn-group">
@@ -435,30 +479,31 @@
 
       function setUser(user) {
         document.getElementById("user-display").innerHTML =
-          "Radhey Radhey, " + user + "👋";
+          "Welcome, " + user + "!";
       }
 
       /***********************
-       * Pomodoro Timer Code
+       * Omodoro Timer Code
        ***********************/
       // Retrieve timer settings from localStorage or use defaults
-      let pomodoroTime = localStorage.getItem("pomodoroTime")
-        ? parseInt(localStorage.getItem("pomodoroTime"), 10)
-        : 25;
+      let omodoroTime = localStorage.getItem("omodoroTime")
+        ? parseInt(localStorage.getItem("omodoroTime"), 10)
+        : 45;
       let shortBreakTime = localStorage.getItem("shortBreakTime")
         ? parseInt(localStorage.getItem("shortBreakTime"), 10)
-        : 5;
+        : 10;
       let longBreakTime = localStorage.getItem("longBreakTime")
         ? parseInt(localStorage.getItem("longBreakTime"), 10)
         : 15;
 
       let timerId;
-      let timeLeft = pomodoroTime * 60;
-      let sessionDuration = timeLeft;
+      let sessionDuration = omodoroTime * 60;
+      let timeLeft = sessionDuration;
       let isRunning = false;
       let isPaused = false;
-      let currentSession = "pomodoro";
-      let pomodoroCount = 0;
+      let currentSession = "omodoro";
+      let omodoroCount = 0;
+      let startTimestamp = null;
 
       function updateDisplay() {
         const minutes = Math.floor(timeLeft / 60);
@@ -480,19 +525,18 @@
           .querySelectorAll(".tab")
           .forEach((tab) => tab.classList.remove("active"));
         document.getElementById(`${session}-tab`).classList.add("active");
-
         const body = document.body;
-        if (session === "pomodoro") {
-          timeLeft = pomodoroTime * 60;
-          sessionDuration = timeLeft;
+        if (session === "omodoro") {
+          sessionDuration = omodoroTime * 60;
+          timeLeft = sessionDuration;
           body.style.backgroundColor = "#690B22";
         } else if (session === "short-break") {
-          timeLeft = shortBreakTime * 60;
-          sessionDuration = timeLeft;
+          sessionDuration = shortBreakTime * 60;
+          timeLeft = sessionDuration;
           body.style.backgroundColor = "#1B4D3E";
         } else if (session === "long-break") {
-          timeLeft = longBreakTime * 60;
-          sessionDuration = timeLeft;
+          sessionDuration = longBreakTime * 60;
+          timeLeft = sessionDuration;
           body.style.backgroundColor = "#9b8238";
         }
         updateDisplay();
@@ -503,14 +547,27 @@
         if (isRunning) {
           if (!isPaused) {
             clearInterval(timerId);
+            // Update sessionDuration with remaining time
+            sessionDuration = timeLeft;
             isPaused = true;
             startPauseBtn.textContent = "Resume";
           } else {
+            // Resume with new timestamp from now
+            startTimestamp = Date.now();
             startTimer();
             isPaused = false;
             startPauseBtn.textContent = "Pause";
           }
         } else {
+          // Starting fresh
+          sessionDuration =
+            currentSession === "omodoro"
+              ? omodoroTime * 60
+              : currentSession === "short-break"
+              ? shortBreakTime * 60
+              : longBreakTime * 60;
+          timeLeft = sessionDuration;
+          startTimestamp = Date.now();
           startTimer();
           isRunning = true;
           startPauseBtn.textContent = "Pause";
@@ -519,22 +576,25 @@
 
       function startTimer() {
         timerId = setInterval(() => {
-          if (timeLeft > 0) {
-            timeLeft--;
+          const elapsed = Math.floor((Date.now() - startTimestamp) / 1000);
+          timeLeft = sessionDuration - elapsed;
+          if (timeLeft <= 0) {
+            timeLeft = 0;
             updateDisplay();
-          } else {
             clearInterval(timerId);
             isRunning = false;
             document.getElementById("start-pause-btn").textContent = "Start";
             playBeep();
-            if (currentSession === "pomodoro") {
-              pomodoroCount++;
+            if (currentSession === "omodoro") {
+              omodoroCount++;
               document.getElementById("cycle-counter").textContent =
-                "Pomodoros Completed: " + pomodoroCount;
+                "Omodoros Completed: " + omodoroCount;
             }
             alert(`${capitalize(currentSession)} finished!`);
+          } else {
+            updateDisplay();
           }
-        }, 1000);
+        }, 250);
       }
 
       function skipSession() {
@@ -547,14 +607,13 @@
         isRunning = false;
         isPaused = false;
         document.getElementById("start-pause-btn").textContent = "Start";
-        if (currentSession === "pomodoro") {
-          timeLeft = pomodoroTime * 60;
-        } else if (currentSession === "short-break") {
-          timeLeft = shortBreakTime * 60;
-        } else if (currentSession === "long-break") {
-          timeLeft = longBreakTime * 60;
-        }
-        sessionDuration = timeLeft;
+        sessionDuration =
+          currentSession === "omodoro"
+            ? omodoroTime * 60
+            : currentSession === "short-break"
+            ? shortBreakTime * 60
+            : longBreakTime * 60;
+        timeLeft = sessionDuration;
         updateDisplay();
       }
 
@@ -577,7 +636,7 @@
       // Settings Modal Functions
       function showSettingsModal() {
         document.getElementById("settings-modal").style.display = "flex";
-        document.getElementById("pomodoro-input").value = pomodoroTime;
+        document.getElementById("omodoro-input").value = omodoroTime;
         document.getElementById("short-break-input").value = shortBreakTime;
         document.getElementById("long-break-input").value = longBreakTime;
       }
@@ -586,7 +645,7 @@
       }
       function saveSettings() {
         const pTime = parseInt(
-          document.getElementById("pomodoro-input").value,
+          document.getElementById("omodoro-input").value,
           10
         );
         const sTime = parseInt(
@@ -598,11 +657,10 @@
           10
         );
         if (pTime > 0 && sTime > 0 && lTime > 0) {
-          pomodoroTime = pTime;
+          omodoroTime = pTime;
           shortBreakTime = sTime;
           longBreakTime = lTime;
-          // Save to localStorage so settings persist
-          localStorage.setItem("pomodoroTime", pomodoroTime);
+          localStorage.setItem("omodoroTime", omodoroTime);
           localStorage.setItem("shortBreakTime", shortBreakTime);
           localStorage.setItem("longBreakTime", longBreakTime);
           resetTimer();

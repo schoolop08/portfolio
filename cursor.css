@@ -5,9 +5,6 @@
     --ops-cursor-text: url(s-cursor.svg), auto;
 }
 
-* {
-    transition: 0.5s;
-}
 
 
 @media (hover: hover) and (pointer: fine) {
