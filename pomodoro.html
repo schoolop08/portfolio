@@ -4,8 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Pomodoro Timer</title>
-    <link rel="stylesheet" href="style.css" />
-    <link rel="stylesheet" href="cursor.css" />
+    <!-- Google Font for Poppins -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
     <style>
       * {
         margin: 0;
@@ -13,7 +16,6 @@
         box-sizing: border-box;
         font-family: "Poppins", sans-serif;
       }
-
       body,
       html {
         transition: background-color 0.5s ease;
@@ -24,29 +26,27 @@
         align-items: center;
         background-color: #9b3838;
       }
-
-      /* Card Container */
+      /* Timer Card */
       .timer-card {
         background: rgba(255, 255, 255, 0.1);
         border: 1px solid rgba(255, 255, 255, 0.2);
         backdrop-filter: blur(20px);
         padding: 30px;
         border-radius: 20px;
-        width: 350px;
+        width: 800px;
         display: flex;
         flex-direction: column;
         gap: 20px;
         color: #dfdfdf;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        position: relative;
       }
-
       /* Tabs */
       .tabs {
         display: flex;
         justify-content: space-between;
         gap: 10px;
       }
-
       .tab {
         padding: 12px 15px;
         background-color: transparent;
@@ -55,26 +55,43 @@
         font-size: 1.2rem;
         border-radius: 8px;
         transition: background-color 0.3s ease;
+        cursor: pointer;
       }
-
       .tab.active {
         background-color: #ffd52b;
         color: #171717;
       }
-
       /* Time Display */
       .time-display {
         text-align: center;
         font-size: 4rem;
+        letter-spacing: 2px;
       }
-
+      /* Progress Bar */
+      .progress-container {
+        width: 100%;
+        height: 8px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 5px;
+        overflow: hidden;
+      }
+      .progress-bar {
+        height: 100%;
+        width: 0%;
+        background: #ffd52b;
+        transition: width 0.5s ease;
+      }
+      /* Cycle Counter */
+      .cycle-counter {
+        text-align: center;
+        font-size: 1rem;
+      }
       /* Controls */
       .controls {
         display: flex;
         justify-content: space-between;
         gap: 10px;
       }
-
       .controls button {
         padding: 10px;
         font-size: 1.2rem;
@@ -83,15 +100,15 @@
         border: none;
         border-radius: 10px;
         flex: 1;
-        transition: transform 0.3s ease;
+        transition: transform 0.3s ease, background-color 0.3s ease;
         height: 50px;
+        cursor: pointer;
       }
-
       .controls button:hover {
         transform: scale(1.05);
+        background-color: #6b6b6b;
       }
-
-      /* Question Mark Button */
+      /* Help Button */
       .help-btn {
         position: fixed;
         bottom: 20px;
@@ -104,13 +121,12 @@
         font-size: 1.5rem;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.3s ease;
+        cursor: pointer;
       }
-
       .help-btn:hover {
         transform: scale(1.1);
       }
-
-      /* Modal for How Pomodoro Works */
+      /* Modal */
       .modal {
         display: none;
         position: fixed;
@@ -123,7 +139,6 @@
         align-items: center;
         color: #dfdfdf;
       }
-
       .modal-content {
         background-color: #1e1e1e;
         padding: 30px;
@@ -131,12 +146,10 @@
         width: 300px;
         text-align: justify;
       }
-
       .modal-content h2 {
         margin-bottom: 15px;
         color: #fff;
       }
-
       .close-btn {
         background-color: transparent;
         border: none;
@@ -144,12 +157,23 @@
         font-size: 1.5rem;
         width: 100%;
         margin-top: 15px;
+        cursor: pointer;
+      }
+      /* Footer */
+      .footer {
+        position: absolute;
+        bottom: 10px;
+        width: 100%;
+        text-align: center;
+        font-size: 0.9rem;
+        color: #fff;
+        opacity: 0.8;
       }
     </style>
   </head>
   <body>
     <div class="timer-card" id="timer-card">
-      <!-- Tabs for Pomodoro, Short Break, Long Break -->
+      <!-- Tabs -->
       <div class="tabs">
         <button
           class="tab active"
@@ -173,47 +197,68 @@
           Long Break
         </button>
       </div>
-
       <!-- Time Display -->
       <div class="time-display" id="display">25:00</div>
-
-      <!-- Controls: Start, Pause, Resume, Skip -->
+      <!-- Progress Bar -->
+      <div class="progress-container">
+        <div class="progress-bar" id="progress-bar"></div>
+      </div>
+      <!-- Cycle Counter (only for Pomodoro sessions) -->
+      <div class="cycle-counter" id="cycle-counter">Pomodoros Completed: 0</div>
+      <!-- Controls -->
       <div class="controls">
         <button id="start-pause-btn" onclick="toggleStartPause()">Start</button>
         <button onclick="skipSession()">Skip</button>
-        <button onclick="resetTimer()">End</button>
+        <button onclick="resetTimer()">Reset</button>
       </div>
     </div>
-
-    <!-- Question Mark Button -->
+    <!-- Help Button -->
     <button class="help-btn" onclick="showModal()">?</button>
-
-    <!-- Modal for How Pomodoro Works -->
+    <!-- Modal -->
     <div class="modal" id="modal">
       <div class="modal-content">
         <h2>How Pomodoro Works</h2>
-        <p>Pomodoro Technique is a time management method.</p>
-        <p>Work for 25 minutes, followed by a 5-minute short break.</p>
-        <p>After 4 cycles, take a longer break of 15 minutes.</p>
+        <p>
+          The Pomodoro Technique is a time management method. Work for 25
+          minutes and take a 5-minute break. After 4 cycles, take a longer break
+          (15 minutes).
+        </p>
         <button class="close-btn" onclick="closeModal()">Close</button>
       </div>
     </div>
     <div class="footer">
-      <p>made with &hearts; by OPS</p>
+      <p>made with ♥ by OPS</p>
     </div>
+    <!-- Audio Element for Beep -->
+    <audio id="beep-sound">
+      <source
+        src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"
+        type="audio/ogg"
+      />
+      Your browser does not support the audio element.
+    </audio>
     <script>
       let timerId;
-      let timeLeft = 25 * 60; // Default Pomodoro time (25 minutes)
+      let timeLeft = 25 * 60; // default: 25 minutes
+      let sessionDuration = timeLeft;
       let isRunning = false;
       let isPaused = false;
       let currentSession = "pomodoro";
+      let pomodoroCount = 0;
 
       function updateDisplay() {
         const minutes = Math.floor(timeLeft / 60);
         const seconds = timeLeft % 60;
-        document.getElementById("display").textContent = `${String(
-          minutes
-        ).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+        document.getElementById("display").textContent =
+          String(minutes).padStart(2, "0") +
+          ":" +
+          String(seconds).padStart(2, "0");
+
+        // Update progress bar
+        const progressPercent =
+          ((sessionDuration - timeLeft) / sessionDuration) * 100;
+        document.getElementById("progress-bar").style.width =
+          progressPercent + "%";
       }
 
       function switchTab(session) {
@@ -224,28 +269,25 @@
           .forEach((tab) => tab.classList.remove("active"));
         document.getElementById(`${session}-tab`).classList.add("active");
 
-        // Update theme colors for body background
         const body = document.body;
-
         if (session === "pomodoro") {
           timeLeft = 25 * 60;
-          body.style.backgroundColor = "#9b3838"; // Pastel red for Pomodoro
-        }
-        if (session === "short-break") {
+          sessionDuration = timeLeft;
+          body.style.backgroundColor = "#9b3838";
+        } else if (session === "short-break") {
           timeLeft = 5 * 60;
-          body.style.backgroundColor = "#529b38"; // Pastel yellow for Short Break
-        }
-        if (session === "long-break") {
+          sessionDuration = timeLeft;
+          body.style.backgroundColor = "#529b38";
+        } else if (session === "long-break") {
           timeLeft = 15 * 60;
-          body.style.backgroundColor = "#9b8238"; // Pastel green for Long Break
+          sessionDuration = timeLeft;
+          body.style.backgroundColor = "#9b8238";
         }
-
         updateDisplay();
       }
 
       function toggleStartPause() {
         const startPauseBtn = document.getElementById("start-pause-btn");
-
         if (isRunning) {
           if (!isPaused) {
             clearInterval(timerId);
@@ -272,11 +314,14 @@
             clearInterval(timerId);
             isRunning = false;
             document.getElementById("start-pause-btn").textContent = "Start";
-            alert(
-              `${
-                currentSession === "pomodoro" ? "Pomodoro" : "Break"
-              } finished!`
-            );
+            playBeep();
+            // If it's a Pomodoro session, increment the counter
+            if (currentSession === "pomodoro") {
+              pomodoroCount++;
+              document.getElementById("cycle-counter").textContent =
+                "Pomodoros Completed: " + pomodoroCount;
+            }
+            alert(`${capitalize(currentSession)} finished!`);
           }
         }, 1000);
       }
@@ -291,19 +336,29 @@
         isRunning = false;
         isPaused = false;
         document.getElementById("start-pause-btn").textContent = "Start";
-
-        if (currentSession === "pomodoro") timeLeft = 25 * 60;
-        if (currentSession === "short-break") timeLeft = 5 * 60;
-        if (currentSession === "long-break") timeLeft = 15 * 60;
-
+        if (currentSession === "pomodoro") {
+          timeLeft = 25 * 60;
+        } else if (currentSession === "short-break") {
+          timeLeft = 5 * 60;
+        } else if (currentSession === "long-break") {
+          timeLeft = 15 * 60;
+        }
+        sessionDuration = timeLeft;
         updateDisplay();
       }
 
-      // Modal Handling
+      function playBeep() {
+        document.getElementById("beep-sound").play();
+      }
+
+      function capitalize(word) {
+        return word.charAt(0).toUpperCase() + word.slice(1);
+      }
+
+      // Modal Functions
       function showModal() {
         document.getElementById("modal").style.display = "flex";
       }
-
       function closeModal() {
         document.getElementById("modal").style.display = "none";
       }
