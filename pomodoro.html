@@ -24,7 +24,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
-        background-color: #9b3838;
+        background-color: #690b22;
       }
       /* Timer Card */
       .timer-card {
@@ -33,13 +33,18 @@
         backdrop-filter: blur(20px);
         padding: 30px;
         border-radius: 20px;
-        width: 800px;
+        width: 450px;
         display: flex;
         flex-direction: column;
         gap: 20px;
         color: #dfdfdf;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         position: relative;
+      }
+      /* User Display */
+      .user {
+        text-align: center;
+        font-size: 1.5rem;
+        margin-bottom: 10px;
       }
       /* Tabs */
       .tabs {
@@ -108,25 +113,32 @@
         transform: scale(1.05);
         background-color: #6b6b6b;
       }
-      /* Help Button */
-      .help-btn {
+      /* Help and Settings Buttons */
+      .help-btn,
+      .settings-btn {
         position: fixed;
         bottom: 20px;
-        right: 20px;
         background-color: #fff;
         color: #171717;
         border: none;
-        padding: 15px;
+        padding: 5px 15px;
         border-radius: 50%;
         font-size: 1.5rem;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         transition: transform 0.3s ease;
         cursor: pointer;
       }
-      .help-btn:hover {
+      .help-btn {
+        right: 20px;
+      }
+      .settings-btn {
+        right: 80px;
+      }
+      .help-btn:hover,
+      .settings-btn:hover {
         transform: scale(1.1);
       }
-      /* Modal */
+      /* Modal Styling (common for both modals) */
       .modal {
         display: none;
         position: fixed;
@@ -144,20 +156,43 @@
         padding: 30px;
         border-radius: 10px;
         width: 300px;
-        text-align: justify;
+        text-align: left;
       }
       .modal-content h2 {
         margin-bottom: 15px;
         color: #fff;
       }
-      .close-btn {
-        background-color: transparent;
-        border: none;
-        color: #fff;
-        font-size: 1.5rem;
+      .modal-content label {
+        display: block;
+        margin: 10px 0 5px;
+      }
+      .modal-content input {
         width: 100%;
+        padding: 8px;
+        border-radius: 5px;
+        border: 1px solid #ccc;
+      }
+      .modal-content .btn-group {
         margin-top: 15px;
+        display: flex;
+        justify-content: space-between;
+      }
+      .modal-content button {
+        padding: 10px;
+        font-size: 1rem;
+        border: none;
+        border-radius: 5px;
         cursor: pointer;
+        flex: 1;
+        margin: 0 5px;
+      }
+      .close-btn {
+        background-color: #535353;
+        color: #fff;
+      }
+      .save-btn {
+        background-color: #ffd52b;
+        color: #171717;
       }
       /* Footer */
       .footer {
@@ -173,6 +208,8 @@
   </head>
   <body>
     <div class="timer-card" id="timer-card">
+      <!-- User Display -->
+      <div class="user" id="user-display"></div>
       <!-- Tabs -->
       <div class="tabs">
         <button
@@ -203,7 +240,7 @@
       <div class="progress-container">
         <div class="progress-bar" id="progress-bar"></div>
       </div>
-      <!-- Cycle Counter (only for Pomodoro sessions) -->
+      <!-- Cycle Counter (for Pomodoro sessions) -->
       <div class="cycle-counter" id="cycle-counter">Pomodoros Completed: 0</div>
       <!-- Controls -->
       <div class="controls">
@@ -212,34 +249,211 @@
         <button onclick="resetTimer()">Reset</button>
       </div>
     </div>
+
+    <!-- Settings Button -->
+    <button class="settings-btn" onclick="showSettingsModal()">⚙</button>
     <!-- Help Button -->
-    <button class="help-btn" onclick="showModal()">?</button>
-    <!-- Modal -->
-    <div class="modal" id="modal">
+    <button class="help-btn" onclick="showHelpModal()">?</button>
+
+    <!-- Help Modal -->
+    <div class="modal" id="help-modal">
       <div class="modal-content">
         <h2>How Pomodoro Works</h2>
         <p>
-          The Pomodoro Technique is a time management method. Work for 25
-          minutes and take a 5-minute break. After 4 cycles, take a longer break
-          (15 minutes).
+          Work for 25 minutes, followed by a 5-minute break. After 4 cycles,
+          take a 15-minute break.
         </p>
-        <button class="close-btn" onclick="closeModal()">Close</button>
+        <button class="close-btn" onclick="closeHelpModal()">Close</button>
       </div>
     </div>
+
+    <!-- Settings Modal -->
+    <div class="modal" id="settings-modal">
+      <div class="modal-content">
+        <h2>Timer Settings</h2>
+        <label for="pomodoro-input">Pomodoro (minutes):</label>
+        <input type="number" id="pomodoro-input" value="25" min="1" />
+        <label for="short-break-input">Short Break (minutes):</label>
+        <input type="number" id="short-break-input" value="5" min="1" />
+        <label for="long-break-input">Long Break (minutes):</label>
+        <input type="number" id="long-break-input" value="15" min="1" />
+        <div class="btn-group">
+          <button class="save-btn" onclick="saveSettings()">Save</button>
+          <button class="close-btn" onclick="closeSettingsModal()">
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
     <div class="footer">
       <p>made with ♥ by OPS</p>
     </div>
-    <!-- Audio Element for Beep -->
+
+    <!-- Audio for Beep -->
     <audio id="beep-sound">
       <source
-        src="https://actions.google.com/sounds/v1/alarms/alarm_clock.ogg"
+        src="https://actions.google.com/sounds/v1/alarms/bugle_tune.ogg"
         type="audio/ogg"
       />
       Your browser does not support the audio element.
     </audio>
+
     <script>
+      /********************
+       * Username Handling
+       ********************/
+      // List of prohibited names or words
+      var prohibitedNames = [
+        "papa",
+        "baap",
+        "maa",
+        "madarchod",
+        "bahenchod",
+        "gandu",
+        "chutiya",
+        "bhosdike",
+        "laude",
+        "loda",
+        "lodu",
+        "chut",
+        "lund",
+        "haraami",
+        "kutta",
+        "kamina",
+        "saala",
+        "chakka",
+        "hijra",
+        "randi",
+        "randwa",
+        "kutti",
+        "suar",
+        "gaand",
+        "bitch",
+        "fuck",
+        "motherfucker",
+        "asshole",
+        "bastard",
+        "slut",
+        "dick",
+        "pussy",
+        "cunt",
+        "whore",
+        "nigger",
+        "shit",
+        "dumbass",
+        "retard",
+        "twat",
+        "prick",
+        "wanker",
+        "piss",
+        "jerk",
+        "cock",
+        "fucker",
+        "ass",
+        "arse",
+        "shag",
+        "dildo",
+        "bollocks",
+        "fag",
+        "scum",
+        "tosser",
+        "bollocks",
+        "bhen",
+        "mc",
+        "bc",
+        "chod",
+        "chutiya",
+        "pataka",
+        "jhant",
+        "rakhail",
+        "kameena",
+        "tatti",
+        "sala",
+        "chuti",
+        "kutti",
+        "haraamzada",
+        "bancho",
+        "haramkhor",
+        "ullu",
+        "bevda",
+        "nashedi",
+        "chhakka",
+        "faadu",
+        "bakchod",
+        "jhaant",
+        "chutya",
+        "loda",
+        "raand",
+        "gand",
+        "bhenchod",
+        "madar",
+        "gaand",
+        "suar",
+        "kalank",
+        "maa ki",
+        "bhen ki",
+        "gaandu",
+        "kamina",
+        "ullu ke pathe",
+        "saale",
+        "kutiya",
+        "choot",
+        "kutta",
+      ];
+
+      // Check for stored username in localStorage
+      var storedUser = localStorage.getItem("username");
+      if (storedUser) {
+        setUser(storedUser);
+      } else {
+        askForName();
+      }
+
+      function askForName() {
+        var user = prompt("Quick Question! What is Your Name?");
+        if (!user) {
+          askForName();
+          return;
+        }
+        if (containsProhibitedWord(user.toLowerCase())) {
+          alert(
+            "The name you entered contains prohibited words. Please enter a different name."
+          );
+          askForName();
+        } else {
+          localStorage.setItem("username", user);
+          setUser(user);
+        }
+      }
+
+      function containsProhibitedWord(name) {
+        return prohibitedNames.some(function (prohibitedWord) {
+          return name.includes(prohibitedWord);
+        });
+      }
+
+      function setUser(user) {
+        document.getElementById("user-display").innerHTML =
+          "Radhey Radhey, " + user + "👋";
+      }
+
+      /***********************
+       * Pomodoro Timer Code
+       ***********************/
+      // Retrieve timer settings from localStorage or use defaults
+      let pomodoroTime = localStorage.getItem("pomodoroTime")
+        ? parseInt(localStorage.getItem("pomodoroTime"), 10)
+        : 25;
+      let shortBreakTime = localStorage.getItem("shortBreakTime")
+        ? parseInt(localStorage.getItem("shortBreakTime"), 10)
+        : 5;
+      let longBreakTime = localStorage.getItem("longBreakTime")
+        ? parseInt(localStorage.getItem("longBreakTime"), 10)
+        : 15;
+
       let timerId;
-      let timeLeft = 25 * 60; // default: 25 minutes
+      let timeLeft = pomodoroTime * 60;
       let sessionDuration = timeLeft;
       let isRunning = false;
       let isPaused = false;
@@ -253,8 +467,6 @@
           String(minutes).padStart(2, "0") +
           ":" +
           String(seconds).padStart(2, "0");
-
-        // Update progress bar
         const progressPercent =
           ((sessionDuration - timeLeft) / sessionDuration) * 100;
         document.getElementById("progress-bar").style.width =
@@ -271,15 +483,15 @@
 
         const body = document.body;
         if (session === "pomodoro") {
-          timeLeft = 25 * 60;
+          timeLeft = pomodoroTime * 60;
           sessionDuration = timeLeft;
-          body.style.backgroundColor = "#9b3838";
+          body.style.backgroundColor = "#690B22";
         } else if (session === "short-break") {
-          timeLeft = 5 * 60;
+          timeLeft = shortBreakTime * 60;
           sessionDuration = timeLeft;
-          body.style.backgroundColor = "#529b38";
+          body.style.backgroundColor = "#1B4D3E";
         } else if (session === "long-break") {
-          timeLeft = 15 * 60;
+          timeLeft = longBreakTime * 60;
           sessionDuration = timeLeft;
           body.style.backgroundColor = "#9b8238";
         }
@@ -315,7 +527,6 @@
             isRunning = false;
             document.getElementById("start-pause-btn").textContent = "Start";
             playBeep();
-            // If it's a Pomodoro session, increment the counter
             if (currentSession === "pomodoro") {
               pomodoroCount++;
               document.getElementById("cycle-counter").textContent =
@@ -337,11 +548,11 @@
         isPaused = false;
         document.getElementById("start-pause-btn").textContent = "Start";
         if (currentSession === "pomodoro") {
-          timeLeft = 25 * 60;
+          timeLeft = pomodoroTime * 60;
         } else if (currentSession === "short-break") {
-          timeLeft = 5 * 60;
+          timeLeft = shortBreakTime * 60;
         } else if (currentSession === "long-break") {
-          timeLeft = 15 * 60;
+          timeLeft = longBreakTime * 60;
         }
         sessionDuration = timeLeft;
         updateDisplay();
@@ -355,15 +566,53 @@
         return word.charAt(0).toUpperCase() + word.slice(1);
       }
 
-      // Modal Functions
-      function showModal() {
-        document.getElementById("modal").style.display = "flex";
+      // Help Modal Functions
+      function showHelpModal() {
+        document.getElementById("help-modal").style.display = "flex";
       }
-      function closeModal() {
-        document.getElementById("modal").style.display = "none";
+      function closeHelpModal() {
+        document.getElementById("help-modal").style.display = "none";
       }
 
-      // Initialize display
+      // Settings Modal Functions
+      function showSettingsModal() {
+        document.getElementById("settings-modal").style.display = "flex";
+        document.getElementById("pomodoro-input").value = pomodoroTime;
+        document.getElementById("short-break-input").value = shortBreakTime;
+        document.getElementById("long-break-input").value = longBreakTime;
+      }
+      function closeSettingsModal() {
+        document.getElementById("settings-modal").style.display = "none";
+      }
+      function saveSettings() {
+        const pTime = parseInt(
+          document.getElementById("pomodoro-input").value,
+          10
+        );
+        const sTime = parseInt(
+          document.getElementById("short-break-input").value,
+          10
+        );
+        const lTime = parseInt(
+          document.getElementById("long-break-input").value,
+          10
+        );
+        if (pTime > 0 && sTime > 0 && lTime > 0) {
+          pomodoroTime = pTime;
+          shortBreakTime = sTime;
+          longBreakTime = lTime;
+          // Save to localStorage so settings persist
+          localStorage.setItem("pomodoroTime", pomodoroTime);
+          localStorage.setItem("shortBreakTime", shortBreakTime);
+          localStorage.setItem("longBreakTime", longBreakTime);
+          resetTimer();
+          closeSettingsModal();
+        } else {
+          alert("Please enter valid numbers greater than 0.");
+        }
+      }
+
+      // Initialize display on load
       updateDisplay();
     </script>
   </body>
