@@ -29,7 +29,8 @@
 
 
     .nav h4 {
-        cursor: var(--ops-cursor-name);
+        cursor: var(--ops-cursor-pointer);
+        transition: 0.5s;
     }
 
     a,
