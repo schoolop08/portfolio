@@ -28,7 +28,7 @@
     }
 
 
-    .nav h4 {
+    .logo {
         cursor: var(--ops-cursor-pointer);
         transition: 0.5s;
     }

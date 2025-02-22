@@ -91,6 +91,17 @@ footer {
     text-align: center;
 }
 
+.nav .logo img {
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+        transform: scale(1.25);
+    }
+}
+
 .nav h4:hover {
     color: var(--primary);
     transform: scale(1.1);
@@ -302,10 +313,6 @@ b {
     .nav {
         padding: auto;
         justify-content: space-between;
-    }
-
-    .nav .name {
-        width: 100px;
     }
 
     /* 
