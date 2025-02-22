@@ -133,8 +133,8 @@ footer {
     height: max-content;
     display: flex;
     flex-direction: column;
-    gap: 10vh;
-    padding: 10vh 0;
+    gap: 5vh;
+    padding: 10vh 0 12vh 0;
 }
 
 .propg a {
