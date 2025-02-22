@@ -1,8 +1,12 @@
 :root {
     --bg: #100F0F;
     --primary: #DDA853;
+    --trans-primary: #DDA85311;
     --accent: #16404D;
+    --trans-accent: #16404D11;
     --text: #FBF5DD;
+    --trans-select: #FBF5DD44;
+    --select: #DDA898;
 }
 
 * {
@@ -14,8 +18,8 @@
     font-style: normal;
 
     &::selection {
-        background-color: transparent;
-        font-family: serif;
+        background-color: var(--trans-select);
+        filter: saturate(12);
     }
 
 }
@@ -61,18 +65,30 @@ body {
     opacity: 1;
 }
 
-.nav {
+.nav,
+footer {
     z-index: 998;
     position: fixed;
     display: flex;
-    width: 100%;
+    max-width: 800px;
+    width: 50%;
     align-items: center;
     justify-content: space-between;
-    padding: 0.5vh 5vw;
-    background-color: var(--bg);
+    left: 50%;
+    transform: translate(-50%, 0);
+    margin: 15px 25px;
+    padding: 5px 25px;
+    background-color: var(--trans-primary);
+    border: var(--primary) 1px solid;
     color: var(--text);
+    border-radius: 25px;
     backdrop-filter: blur(15px);
     font-size: 20px;
+}
+
+footer {
+    bottom: 10px;
+    text-align: center;
 }
 
 .nav h4:hover {
@@ -82,11 +98,11 @@ body {
 
 .nav button a:hover {
     color: var(--primary);
+    border-radius: 100px;
     transform: scale(1.1);
 }
 
 .nav button {
-    padding: 20px;
     background-color: transparent;
     border: none;
     border-radius: 10px;
@@ -95,6 +111,7 @@ body {
 
 .nav button a {
     color: var(--text);
+    padding: 5px;
     text-decoration: none;
     font-size: 20px;
 }
@@ -117,7 +134,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 10vh;
-    padding: 15vh 0;
+    padding: 10vh 0;
 }
 
 .propg a {
@@ -143,11 +160,11 @@ body {
     justify-content: space-between;
     width: 1000px;
     padding: 50px;
-    border: #ffffff1c 1px solid;
+    border: var(--accent) 1px solid;
     border-radius: 30px;
     gap: 50px;
     color: var(--text);
-    background-color: #ffffff1c;
+    background-color: var(--trans-accent);
     backdrop-filter: blur(20px);
 }
 
@@ -192,64 +209,63 @@ body {
 
 .pg2 .card {
     width: 1000px;
-    background-color: var(--accent);
+    background-color: var(--trans-accent);
     backdrop-filter: blur(20px);
     border: var(--accent) 1px solid;
     border-radius: 30px;
-    min-width: 300px;
-    height: 400px;
+    min-width: 400px;
     padding: 30px;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
     font-size: 30px;
 }
+
 
 .pg2 h3 {
     margin: 0;
     margin-bottom: 20px;
     font-weight: 600;
+    width: 100%;
+    text-align: center;
 }
 
 .pg2 .pp {
     align-self: center;
-    height: 100px;
     width: 100px;
     border-radius: 100%;
 }
 
 .pg2 .btns {
     display: flex;
-    flex-direction: column;
+    justify-content: space-evenly;
+    width: 100%;
 }
 
 .pg2 .btns button {
     border: none;
-    background-color: var(--accent);
+    background-color: var(--primary);
     margin-top: 20px;
-    border-radius: 10px;
+    border-radius: 100px;
     display: flex;
     align-items: center;
-    justify-content: center;
+    justify-content: space-between;
     flex-direction: column;
     transform: scale(1);
 }
 
 .pg2 .btns button:hover {
-    transform: scale(1.0025);
+    transform: scale(1.025);
 }
 
 .pg2 .btns button a {
-    padding: 15px 200px;
     display: flex;
-    flex-direction: row-reverse;
-    justify-content: space-between;
-    width: 100%;
     align-items: center;
     color: var(--text);
     text-decoration: none;
     font-size: 18px;
     font-weight: 700;
+}
+
+.pg2 .btns button a img {
+    border-radius: 15px;
 }
 
 b {
@@ -258,12 +274,15 @@ b {
 }
 
 
-.footer {
+/* footer {
+    border-radius: 100px 100px 0 0;
+    padding: 25px;
+    margin: 0 100px;
+    text-align: center;
     color: var(--text);
-    position: absolute;
-    bottom: 0;
-    margin-bottom: 10px;
-}
+    border: 1px solid var(--primary);
+    background-color: var(--trans-primary);
+} */
 
 @media (max-width:769px) {
     .crsr {
