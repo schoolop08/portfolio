@@ -38,14 +38,14 @@ html {
 }
 
 ::-webkit-scrollbar {
-    width: 0px;
+    width: 5px;
+    background-color: var(--trans-primary);
 }
 
-.bodycontainer::-webkit-scrollbar {
-    width: 10px;
-}
-
-.bodycontainer::-webkit-scrollbar-thumb {
+::-webkit-scrollbar-thumb {
+    width: 5px;
+    margin: 2px;
+    border-radius: 100px;
     background-color: var(--primary);
 }
 
@@ -71,7 +71,7 @@ footer {
     position: fixed;
     display: flex;
     max-width: 800px;
-    width: 50%;
+    width: 75%;
     align-items: center;
     justify-content: space-between;
     left: 50%;
